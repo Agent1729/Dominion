@@ -1,0 +1,5 @@
+C:\Users\Christopher\Desktop\CPTS122\DominionAI\DominionAI\bin\Debug\DominionAI.exe
+C:\Users\Christopher\Desktop\CPTS122\DominionAI\DominionAI\bin\Debug\DominionAI.pdb
+C:\Users\Christopher\Desktop\CPTS122\DominionAI\DominionAI\obj\x86\Debug\DominionAI.exe
+C:\Users\Christopher\Desktop\CPTS122\DominionAI\DominionAI\obj\x86\Debug\DominionAI.pdb
+C:\Users\Christopher\Desktop\CPTS122\DominionAI\DominionAI\obj\x86\Debug\DominionAI.csprojResolveAssemblyReference.cache

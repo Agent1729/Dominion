@@ -5,6 +5,8 @@ using System.Text;
 
 namespace DominionAI
 {
+	//Keep track of the stats of a purchase
+	//Helps the AI determine how impactful the purchase was
 	public class Purchase
 	{
 		public Card purchase;

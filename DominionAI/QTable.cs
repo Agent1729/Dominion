@@ -7,6 +7,9 @@ using System.IO;
 
 namespace DominionAI
 {
+	//Table of q-learning values from which to grab probabilities of using certain purchases in the future
+	//q[turn][gold] is the state
+	//q[turn][gold][card] is the probability of an action given that state
 	public class QTable
 	{
 		double[][][] q;
@@ -31,6 +34,7 @@ namespace DominionAI
 			}
 		}
 
+		//Picks an action randomly based on the possibilities of state q[turn][gold], and which actions are valid
 		public int pickAction(int turn, int gold, bool[] validAction)
 		{
 			Random rand = new Random();
@@ -39,6 +43,7 @@ namespace DominionAI
 
 			double total = 0;
 			double r;
+			//Since the sum of all probabilities need not add up to 1, get what they do add up to and make that the total for rand
 			for (int i = 0; i < uniqueCards; i++)
 				if(validAction[i])
 					total += q[turn][gold][i];
@@ -46,6 +51,7 @@ namespace DominionAI
 			r = rand.NextDouble() * total;
 			double origR = r;
 
+			//Run through the possibilities til we have the one we randomly selected
 			for (int i = 0; i < uniqueCards; i++)
 			{
 				if (validAction[i])
@@ -56,10 +62,12 @@ namespace DominionAI
 				}
 			}
 
+			//Error
 			Console.WriteLine("FAILED TO PROPERLY PICK AN ACTION!!!");
 			return uniqueCards - 1;
 		}
 
+		//Adjust the qTable based on purchases, given performance vp, and past performance avgval
 		public void adjustQTable(Card[] cardList, List<Purchase> purchases, int vp, int avgval)
 		{
 			double value = 0;
@@ -80,6 +88,7 @@ namespace DominionAI
 			double rs = 0;
 			double minimum = .5;
 
+			//Foreach purchase, modify that action's probability in the future based on performance
 			foreach (Purchase p in purchases)
 			{
 				int cardNumber = findCardNumber(cardList, p.purchase);
@@ -95,6 +104,7 @@ namespace DominionAI
 			}
 		}
 
+		//Returns the index of find in cardList
 		public int findCardNumber(Card[] cardList, Card find)
 		{
 			for (int i = 0; i < uniqueCards - 1; i++)
@@ -105,6 +115,7 @@ namespace DominionAI
 			return 0;
 		}
 
+		//Save the updated qTable to file path
 		public void saveQTable(string path)
 		{
 			StreamWriter file = new StreamWriter(path);
@@ -123,6 +134,7 @@ namespace DominionAI
 			file.Close();
 		}
 
+		//Load the qTable from file path
 		public void loadQTable(string path)
 		{
 			try
@@ -146,7 +158,5 @@ namespace DominionAI
 			}
 			catch { return;  }
 		}
-
-
 	}
 }

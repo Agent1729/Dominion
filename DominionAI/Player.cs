@@ -19,6 +19,7 @@ namespace DominionAI
 		static bool printDiscard = true;	//Debug value
 		static int uniqueCards = 16;
 
+		//Construct Player with the cardlist, and whether to use debug printing
 		public Player(Card[] cardList, bool _print)
 		{
 			qtable = new QTable();
@@ -39,6 +40,7 @@ namespace DominionAI
 				//deck.Add(cardList[3]);		//Market
 		}
 
+		//Draw n cards
 		public void drawCards(int n)
 		{
 			for (int i = 0; i < n; i++)
@@ -52,18 +54,21 @@ namespace DominionAI
 			}
 		}
 
+		//Discard the nth card in hand
 		public void discardCard(int n)
 		{
 			discard.Add(hand[n]);
 			hand.RemoveAt(n);
 		}
 
+		//Discard the whole hand
 		public void discardHand()
 		{
 			while (hand.Count > 0)
 				discardCard(0);
 		}
 
+		//Shuffles the discard into your deck
 		public void shuffleDiscardIntoDeck()
 		{
 			Random r = new Random();
@@ -81,6 +86,7 @@ namespace DominionAI
 			}
 		}
 
+		//Debug print out the hand
 		public void printHand()
 		{
 			for (int i = 0; i < hand.Count; i++)
@@ -89,6 +95,7 @@ namespace DominionAI
 			}
 		}
 
+		//Debug print out the deck
 		public void printDeck()
 		{
 			for (int i = 0; i < deck.Count; i++)
@@ -97,6 +104,7 @@ namespace DominionAI
 			}
 		}
 
+		//Debug print out the current hand, deck, and if disc also discard, as well as current state
 		public void printHandDeck(bool disc)
 		{
 			if(!disc)
@@ -131,6 +139,7 @@ namespace DominionAI
 			Console.WriteLine("\tActions: {0}\t\tBuys: {1}\tGOLD: {2}", stats.actions, stats.buys, stats.gold);
 		}
 
+		//Take 1 turn, given the turn number for the Ai and the list of cards
 		public void takeTurn(int turn, Card[] cardList)
 		{
 			stats = new PlayerStats();
@@ -152,6 +161,7 @@ namespace DominionAI
 			if (print) Console.Write("\n\n");
 		}
 
+		//Plays the hand to get the optimal gold amount for buying, or altering the vp status quo as much as possible
 		public void playHand()
 		{
 			//hand = hand.OrderBy(o => o.actions).ToList();	//Sorts by ascending actions, 0 first
@@ -160,7 +170,7 @@ namespace DominionAI
 			do
 			{
 				if (stats.gold > 100)
-					break;
+					break;	//If we somehow get this high, we can almost certainly get infinite gold, but lets not go that far
 				i = 0;
 				while ((i < hand.Count) && (stats.actions > 0))	//Play multi-action cards first
 				{
@@ -183,6 +193,7 @@ namespace DominionAI
 							continue;
 				}
 				
+				//Play the card that gives the most buys
 				if ((stats.gold > 5) && (stats.actions > 0))	//CAN CHANGE THE NUMBER 5
 				{
 					int bestCard = findBestCard("buys");
@@ -190,6 +201,7 @@ namespace DominionAI
 						if (playCard(bestCard) == true)
 							continue;
 				}
+				//Play the card that gives the most gold
 				else if (stats.actions > 0)
 				{
 					int bestCard = findBestCard("gold");
@@ -197,6 +209,7 @@ namespace DominionAI
 						if (playCard(bestCard) == true)
 							continue;
 				}
+				//Play the card that gives the most draws
 				if ((stats.actions > 0) && (deck.Count + discard.Count > 0))
 				{
 					int bestCard = findBestCard("cards");
@@ -218,6 +231,7 @@ namespace DominionAI
 			} while (true);
 		}
 
+		//Plays the nth card in hand
 		public bool playCard(int n)
 		{
 			bool isMoney = (hand[n].cardType == "money");
@@ -227,7 +241,7 @@ namespace DominionAI
 				stats.actions--;
 			stats.actions += hand[n].actions;
 			stats.buys += hand[n].buys;
-			stats.effect += hand[n].effect;
+			stats.effect += hand[n].vpEffect;
 			stats.gold += hand[n].gold;
 			int cardsToDraw = hand[n].cards;
 
@@ -245,6 +259,8 @@ namespace DominionAI
 			return cardsToDraw > 0;
 		}
 
+		//Find the card that is the strongest in hand of attribute att
+		//att=="firstAction" returns the first action card found
 		public int findBestCard(string att)
 		{
 			int best = 0;
@@ -295,6 +311,7 @@ namespace DominionAI
 			return -1;
 		}
 
+		//Buys a card given the turn and cardList, using the AI to do so
 		public void buy(int turn, Card[] cardList)
 		{
 			while (hand.Count > 0)
@@ -328,13 +345,15 @@ namespace DominionAI
 				stats.buys--;
 			} while ((stats.gold >= 0) && (stats.buys > 0));
 		}
-
+		
+		//Tell the qTable to adjust itself using cardlist and average vp value so far
 		public void adjustQTable(Card[] cardList, int avgval)
 		{
 			int vp = getVP();
 			qtable.adjustQTable(cardList, purchases, vp, avgval);
 		}
 
+		//Count up the current victory points
 		public int getVP()
 		{
 			int vp = 0;
@@ -347,17 +366,20 @@ namespace DominionAI
 			return vp;
 		}
 
+		//Print victory points
 		public void printVP()
 		{
 			int vp = getVP();
 			Console.WriteLine("VICTORY POINTS: {0}", vp);
 		}
 
+		//Save the qTable to file path
 		public void saveQTable(string path)
 		{
 			qtable.saveQTable(path);
 		}
 
+		//Load the qTable from path
 		public void loadQTable(string path)
 		{
 			qtable.loadQTable(path);

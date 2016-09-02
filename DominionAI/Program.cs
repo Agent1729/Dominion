@@ -10,6 +10,8 @@ namespace DominionAI
 		static int games = 500;
 		static int maxTurns = 20;
 
+		//Play games # of games, using and updating the AI qTable
+		//Currently 1Player
 		static void Main(string[] args)
 		{
 			Card[] cardList = loadCards();
@@ -25,6 +27,7 @@ namespace DominionAI
 			Console.WriteLine("\n\nAverage VP: {0}", avg);
 		}
 
+		//Creates a list of all the cards in the game
 		static Card[] loadCards()
 		{
 			Card[] cardList = new Card[16];
@@ -49,6 +52,9 @@ namespace DominionAI
 			return cardList;
 		}
 
+		//Plays one single player game using a given AI at path, and saving updates to it
+		//If useAI==false, don't load the AI, just save to it
+		//To update the AI better, give it it's prior average scores
 		static int playGame(Card[] cardList, bool print, string path, bool useAI, int avg)
 		{
 			Player p1 = new Player(cardList, print);

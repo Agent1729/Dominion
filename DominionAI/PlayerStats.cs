@@ -5,6 +5,7 @@ using System.Text;
 
 namespace DominionAI
 {
+	//A supplementary class that keeps track of the players current stats
 	public class PlayerStats
 	{
 		public int actions;

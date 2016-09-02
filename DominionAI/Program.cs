@@ -21,7 +21,7 @@ namespace DominionAI
 			{
 				if (i != 0) avg = (double)total / (double)i;
 				else avg = 3;
-				total += playGame(cardList, false, "try3.txt", true, (int)avg);
+				total += playGame(cardList, false, "Qlearn.txt", true, (int)avg);
 			}
 			avg = (double)total / games;
 			Console.WriteLine("\n\nAverage VP: {0}", avg);

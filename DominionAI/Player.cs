@@ -234,6 +234,7 @@ namespace DominionAI
 		//Plays the nth card in hand
 		public bool playCard(int n)
 		{
+			if (n < 0) return false;
 			bool isMoney = (hand[n].cardType == "money");
 			if (!isMoney)
 				if (print) Console.WriteLine("PLAYING CARD: {0}", hand[n].name);
@@ -263,6 +264,7 @@ namespace DominionAI
 		//att=="firstAction" returns the first action card found
 		public int findBestCard(string att)
 		{
+			if (hand.Count == 0) return -1;
 			int best = 0;
 			if (att == "cards")
 			{

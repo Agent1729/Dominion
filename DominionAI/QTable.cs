@@ -70,37 +70,53 @@ namespace DominionAI
 		//Adjust the qTable based on purchases, given performance vp, and past performance avgval
 		public void adjustQTable(Card[] cardList, List<Purchase> purchases, int vp, int avgval)
 		{
-			double value = 0;
+			double reward = 0;
+			//Really old algorithm
 			/*int baseVal = 10;
 			if (vp >= baseVal)
 				value = (vp - baseVal) * Math.Abs(vp - baseVal) * Math.Abs(vp - baseVal);
 			else
 				value = (vp - baseVal);//*/
 
-			if (vp > avgval)
-				value = 2.0 * (vp - avgval) * ((double)vp / 10.0) * ((double)vp / 10.0);
-			else
-				value = 0.9 + ((double)vp / (double)avgval) * 0.1;
+			//Old algorithm
+			//if (vp > avgval)
+			//	reward = 2.0 * (vp - avgval) * ((double)vp / 10.0) * ((double)vp / 10.0);
+			//else
+			//	reward = 0.9 + ((double)vp / (double)avgval) * 0.1;
 
-			double alpha = .8;
-			double lambda = 1;
-			double next = value;
-			double rs = 0;
-			double minimum = .5;
+			double alpha = .2;
+			//double lambda = 1;
+			//double next = reward;
+			//double rs = 0;
+			//double minimum = .5;
+			
+			//Finding a good formula for reward is hard
+			//Lets use roughly how much better we did than average squared, but negative if we did poorly
+			reward = (vp - avgval / 2) * (vp - avgval / 2) * Math.Abs(vp - avgval) / (vp - avgval + .5);
+			//reward = vp * vp;
+			double discount = .2;
 
 			//Foreach purchase, modify that action's probability in the future based on performance
 			foreach (Purchase p in purchases)
 			{
 				int cardNumber = findCardNumber(cardList, p.purchase);
 				double qvi = q[p.turn][p.goldBefore][cardNumber];
-				double qvo = qvi;
-				if (vp > avgval)
-					qvo += alpha * (rs + lambda * next - qvi);
-				else
-					qvo *= value;
-				if (qvo < minimum)
-					qvo = minimum;
-				q[p.turn][p.goldBefore][cardNumber] = qvo;
+				double maxNextState = 0;
+				for (int i = 0; i < uniqueCards; i++)
+				{
+					if (q[p.turn][p.goldBefore][i] > maxNextState)
+						maxNextState = q[p.turn][p.goldBefore][i];
+				}
+				//Old modified algorithm
+				//if (vp > avgval)
+				//	qvo += alpha * (rs + lambda * next - qvi);
+				//else
+				//	qvo *= reward;
+				//if (qvo < minimum)
+				//	qvo = minimum;
+				double qnext = qvi + alpha * (reward + discount * maxNextState - qvi);
+				if (qnext < 0) qnext = 0;
+				q[p.turn][p.goldBefore][cardNumber] = qnext;
 			}
 		}
 

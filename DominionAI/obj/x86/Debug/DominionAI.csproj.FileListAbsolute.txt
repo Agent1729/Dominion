@@ -10,3 +10,6 @@ C:\Users\Christopher John\Desktop\Code\GIT\Dominion\DominionAI\obj\x86\Debug\Dom
 C:\Users\Christopher John\Desktop\Code\GIT\Dominion\DominionAI\bin\Debug\DominionAI.exe
 C:\Users\Christopher John\Desktop\Code\GIT\Dominion\DominionAI\bin\Debug\DominionAI.pdb
 C:\Users\Christopher John\Desktop\Code\GIT\Dominion\DominionAI\obj\x86\Debug\DominionAI.csprojResolveAssemblyReference.cache
+C:\Users\Agent1729.Agent1729-PC\Documents\CPP\GIT\Dominion\Dominion\DominionAI\bin\Debug\DominionAI.exe
+C:\Users\Agent1729.Agent1729-PC\Documents\CPP\GIT\Dominion\Dominion\DominionAI\bin\Debug\DominionAI.pdb
+C:\Users\Agent1729.Agent1729-PC\Documents\CPP\GIT\Dominion\Dominion\DominionAI\obj\x86\Debug\DominionAI.csprojResolveAssemblyReference.cache
